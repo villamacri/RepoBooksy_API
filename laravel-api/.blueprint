@@ -7,14 +7,14 @@ created:
     - database/factories/TransaccionFactory.php
     - database/factories/FeedbackFactory.php
     - database/factories/ReporteFactory.php
-    - database/migrations/2025_12_10_080349_create_users_table.php
-    - database/migrations/2025_12_10_080350_create_categorias_table.php
-    - database/migrations/2025_12_10_080351_create_libros_table.php
-    - database/migrations/2025_12_10_080352_create_eventos_table.php
-    - database/migrations/2025_12_10_080353_create_participacion_eventos_table.php
-    - database/migrations/2025_12_10_080354_create_transaccions_table.php
-    - database/migrations/2025_12_10_080355_create_feedback_table.php
-    - database/migrations/2025_12_10_080356_create_reportes_table.php
+    - database/migrations/2025_12_10_125012_create_users_table.php
+    - database/migrations/2025_12_10_125013_create_categorias_table.php
+    - database/migrations/2025_12_10_125014_create_libros_table.php
+    - database/migrations/2025_12_10_125015_create_eventos_table.php
+    - database/migrations/2025_12_10_125016_create_participacion_eventos_table.php
+    - database/migrations/2025_12_10_125017_create_transaccions_table.php
+    - database/migrations/2025_12_10_125018_create_feedback_table.php
+    - database/migrations/2025_12_10_125019_create_reportes_table.php
     - app/Models/User.php
     - app/Models/Categoria.php
     - app/Models/Libro.php
