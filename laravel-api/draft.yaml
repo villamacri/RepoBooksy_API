@@ -1,0 +1,85 @@
+models:
+  User:
+    nombre: string
+    apellidos: string
+    email: string unique
+    password: string
+    telefono: string nullable
+    role: enum:admin,user default:user
+    reputacion: string nullable
+    preferencias_categoria: text nullable
+    nivel_acceso: string nullable
+    area_responsabilidad: text nullable
+    fecha_registro: date
+    estado: string default:activo
+    softDeletes: true
+    timestamps: true
+    relationships:
+      hasMany: Libro, Transaccion, Feedback, Reporte, ParticipacionEvento
+
+  Categoria:
+    nombre: string:100
+    descripcion: text nullable
+    timestamps: true
+    relationships:
+      hasMany: Libro
+
+  Libro:
+    titulo: string
+    autor: string
+    editorial: string nullable
+    anio_editorial: integer nullable
+    descripcion: text nullable
+    estado_fisico: string nullable
+    tipo_operacion: string
+    precio: decimal:8,2 nullable
+    fecha_publicacion: date nullable
+    disponibilidad: string default:disponible
+    timestamps: true
+    relationships:
+      belongsTo: Categoria, User
+      hasMany: Transaccion, Feedback
+
+  Evento:
+    nombre: string
+    descripcion: text nullable
+    fecha_evento: date
+    ubicacion: string nullable
+    capacidad_maxima: integer nullable
+    timestamps: true
+    relationships:
+      hasMany: ParticipacionEvento
+
+  ParticipacionEvento:
+    fecha_inscripcion: date
+    estado: string default:confirmado
+    timestamps: true
+    relationships:
+      belongsTo: User, Evento
+
+  Transaccion:
+    tipo_transaccion: string
+    fecha_transaccion: date
+    monto: decimal:8,2 nullable
+    metodo_pago: string nullable
+    estado: string default:pendiente
+    timestamps: true
+    relationships:
+      belongsTo: Libro, User:comprador, User:vendedor
+
+  Feedback:
+    puntuacion: integer
+    comentario: text nullable
+    fecha_feedback: date
+    timestamps: true
+    relationships:
+      belongsTo: User, Libro
+
+  Reporte:
+    tipo_reporte: string
+    descripcion: text
+    fecha_reporte: date
+    estado: string default:pendiente
+    timestamps: true
+    relationships:
+      belongsTo: User

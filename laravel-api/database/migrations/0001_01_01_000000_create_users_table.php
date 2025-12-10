@@ -16,8 +16,13 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('apellidos');
             $table->string('email')->unique();
-            $table->string('contraseña');
+            $table->string('password');
             $table->string('telefono')->nullable();
+            $table->enum('role', ['admin', 'user'])->default('user');
+            $table->string('reputacion')->nullable();
+            $table->text('preferencias_categoria')->nullable();
+            $table->string('nivel_acceso')->nullable();
+            $table->text('area_responsabilidad')->nullable();
             $table->date('fecha_registro');
             $table->string('estado')->default('activo');
             $table->rememberToken();

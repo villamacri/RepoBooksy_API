@@ -1,0 +1,34 @@
+created:
+    - database/factories/UserFactory.php
+    - database/factories/CategoriaFactory.php
+    - database/factories/LibroFactory.php
+    - database/factories/EventoFactory.php
+    - database/factories/ParticipacionEventoFactory.php
+    - database/factories/TransaccionFactory.php
+    - database/factories/FeedbackFactory.php
+    - database/factories/ReporteFactory.php
+    - database/migrations/2025_12_10_080349_create_users_table.php
+    - database/migrations/2025_12_10_080350_create_categorias_table.php
+    - database/migrations/2025_12_10_080351_create_libros_table.php
+    - database/migrations/2025_12_10_080352_create_eventos_table.php
+    - database/migrations/2025_12_10_080353_create_participacion_eventos_table.php
+    - database/migrations/2025_12_10_080354_create_transaccions_table.php
+    - database/migrations/2025_12_10_080355_create_feedback_table.php
+    - database/migrations/2025_12_10_080356_create_reportes_table.php
+    - app/Models/User.php
+    - app/Models/Categoria.php
+    - app/Models/Libro.php
+    - app/Models/Evento.php
+    - app/Models/ParticipacionEvento.php
+    - app/Models/Transaccion.php
+    - app/Models/Feedback.php
+    - app/Models/Reporte.php
+models:
+    User: { nombre: string, apellidos: string, email: 'string unique', password: string, telefono: 'string nullable', role: 'enum:admin,user default:user', reputacion: 'string nullable', preferencias_categoria: 'text nullable', nivel_acceso: 'string nullable', area_responsabilidad: 'text nullable', fecha_registro: date, estado: 'string default:activo', softdeletes: softDeletes, timestamps: timestamps, relationships: { hasMany: 'Libro, Transaccion, Feedback, Reporte, ParticipacionEvento' } }
+    Categoria: { nombre: 'string:100', descripcion: 'text nullable', timestamps: timestamps, relationships: { hasMany: Libro } }
+    Libro: { titulo: string, autor: string, editorial: 'string nullable', anio_editorial: 'integer nullable', descripcion: 'text nullable', estado_fisico: 'string nullable', tipo_operacion: string, precio: 'decimal:8,2 nullable', fecha_publicacion: 'date nullable', disponibilidad: 'string default:disponible', timestamps: timestamps, relationships: { belongsTo: 'Categoria, User', hasMany: 'Transaccion, Feedback' } }
+    Evento: { nombre: string, descripcion: 'text nullable', fecha_evento: date, ubicacion: 'string nullable', capacidad_maxima: 'integer nullable', timestamps: timestamps, relationships: { hasMany: ParticipacionEvento } }
+    ParticipacionEvento: { fecha_inscripcion: date, estado: 'string default:confirmado', timestamps: timestamps, relationships: { belongsTo: 'User, Evento' } }
+    Transaccion: { tipo_transaccion: string, fecha_transaccion: date, monto: 'decimal:8,2 nullable', metodo_pago: 'string nullable', estado: 'string default:pendiente', timestamps: timestamps, relationships: { belongsTo: 'Libro, User:comprador, User:vendedor' } }
+    Feedback: { puntuacion: integer, comentario: 'text nullable', fecha_feedback: date, timestamps: timestamps, relationships: { belongsTo: 'User, Libro' } }
+    Reporte: { tipo_reporte: string, descripcion: text, fecha_reporte: date, estado: 'string default:pendiente', timestamps: timestamps, relationships: { belongsTo: User } }
