@@ -38,7 +38,7 @@ class TransaccionController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $transaccion = Transaccion::create($request->all());
+        $transaccion = Transaccion::create($validator->validated());
         $transaccion->load(['libro', 'comprador', 'vendedor']);
         return response()->json($transaccion, 201);
     }
@@ -72,7 +72,7 @@ class TransaccionController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $transaccion->update($request->all());
+        $transaccion->update($validator->validated());
         $transaccion->load(['libro', 'comprador', 'vendedor']);
         return response()->json($transaccion, 200);
     }

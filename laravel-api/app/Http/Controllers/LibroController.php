@@ -42,7 +42,7 @@ class LibroController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $libro = Libro::create($request->all());
+        $libro = Libro::create($validator->validated());
         $libro->load(['categoria', 'user']);
         return response()->json($libro, 201);
     }
@@ -80,7 +80,7 @@ class LibroController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $libro->update($request->all());
+        $libro->update($validator->validated());
         $libro->load(['categoria', 'user']);
         return response()->json($libro, 200);
     }

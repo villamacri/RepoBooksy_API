@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-// Importamos TU controlador de autenticación nuevo
 use App\Http\Controllers\AuthController; 
-// Importamos el resto de controladores
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\FeedbackController;
@@ -20,15 +18,13 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
-// Login (Usa tu AuthController nuevo)
+// Autenticación y Registro
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Opcional: Lectura pública de catálogos (solo ver lista y detalle)
+// Catálogos Públicos (Solo lectura para atraer al usuario en la app móvil)
 Route::apiResource('categorias', CategoriaController::class)->only(['index', 'show']);
-Route::apiResource('eventos', EventoController::class)->only(['index', 'show']);
-// Nota: Si quieres que ver libros sea público, descomenta la siguiente línea:
-// Route::apiResource('libros', LibroController::class)->only(['index', 'show']);
-
+Route::apiResource('libros', LibroController::class)->only(['index', 'show']); // ¡Descomentado!
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +33,7 @@ Route::apiResource('eventos', EventoController::class)->only(['index', 'show']);
 */
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    // Logout (Cerrar sesión)
+    // Logout (Cerrar sesión destruyendo el token)
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Ruta para obtener datos del usuario logueado
@@ -46,21 +42,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // --- GESTIÓN COMPLETA (CRUD) ---
-    // Al estar aquí dentro, nadie puede crear/editar/borrar sin estar logueado.
     
-    // Usuarios (Crear, editar, borrar usuarios)
+    // Usuarios y Transacciones (Módulo Financiero)
     Route::apiResource('users', UserController::class);
-
-    // Libros, Transacciones, etc.
-    Route::apiResource('libros', LibroController::class);
     Route::apiResource('transacciones', TransaccionController::class);
+    
+    // Libros (Laravel añadirá automáticamente create/store/update/destroy porque index y show ya son públicos)
+    Route::apiResource('libros', LibroController::class)->except(['index', 'show']);
+    
+    // Módulos fuera del alcance del MVP móvil (pero listos en el backend)
     Route::apiResource('feedback', FeedbackController::class);
     Route::apiResource('participacion-eventos', ParticipacionEventoController::class);
     Route::apiResource('reportes', ReporteController::class);
-    
-    // Categorias y Eventos (Gestión completa para admins/usuarios)
-    // Laravel es listo: si usas 'apiResource' aquí dentro, añadirá las rutas 
-    // de create/update/delete que faltaban en la parte pública.
-    Route::apiResource('categorias', CategoriaController::class)->except(['index', 'show']);
     Route::apiResource('eventos', EventoController::class)->except(['index', 'show']);
+    Route::apiResource('categorias', CategoriaController::class)->except(['index', 'show']);
 });

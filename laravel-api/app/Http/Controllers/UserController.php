@@ -43,8 +43,8 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $request->all();
-        $data['password'] = Hash::make($request->password);
+        $data = $validator->validated();
+        $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
         return response()->json($user, 201);
