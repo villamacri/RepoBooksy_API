@@ -6,34 +6,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Categoria extends Model
+class Meetup extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'nombre',
-        'descripcion',
+        'name',
+        'description',
+        'meetup_date',
+        'location',
+        'max_capacity',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'id' => 'integer',
+            'meetup_date' => 'date', // Ajustado a date
+            'max_capacity' => 'integer',
         ];
     }
 
-    public function libros(): HasMany
+    public function attendances(): HasMany
     {
-        return $this->hasMany(Libro::class);
+        return $this->hasMany(MeetupAttendance::class);
     }
 }

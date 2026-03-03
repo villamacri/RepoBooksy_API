@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ParticipacionEvento extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,8 @@ class ParticipacionEvento extends Model
      * @var array
      */
     protected $fillable = [
-        'fecha_inscripcion',
-        'estado',
-        'user_id',
-        'evento_id',
+        'name',
+        'description',
     ];
 
     /**
@@ -31,19 +29,12 @@ class ParticipacionEvento extends Model
     {
         return [
             'id' => 'integer',
-            'fecha_inscripcion' => 'date',
-            'user_id' => 'integer',
-            'evento_id' => 'integer',
         ];
     }
 
-    public function user(): BelongsTo
+    public function books(): HasMany
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function evento(): BelongsTo
-    {
-        return $this->belongsTo(Evento::class);
+        // Actualizado para apuntar al modelo Book en inglés
+        return $this->hasMany(Book::class); 
     }
 }

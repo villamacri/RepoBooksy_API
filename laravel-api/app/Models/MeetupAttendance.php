@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Reporte extends Model
+class MeetupAttendance extends Model
 {
     use HasFactory;
 
@@ -16,11 +16,10 @@ class Reporte extends Model
      * @var array
      */
     protected $fillable = [
-        'tipo_reporte',
-        'descripcion',
-        'fecha_reporte',
-        'estado',
+        'enrollment_date',
+        'status',
         'user_id',
+        'meetup_id', // Antes evento_id
     ];
 
     /**
@@ -32,13 +31,21 @@ class Reporte extends Model
     {
         return [
             'id' => 'integer',
-            'fecha_reporte' => 'date',
+            'enrollment_date' => 'date', // fecha_inscripcion
             'user_id' => 'integer',
+            'meetup_id' => 'integer',
         ];
     }
+
+    // RELACIONES
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function meetup(): BelongsTo
+    {
+        return $this->belongsTo(Meetup::class); // Antes Evento::class
     }
 }

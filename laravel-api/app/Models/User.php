@@ -14,18 +14,18 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'nombre',
-        'apellidos',
+        'name',
+        'last_name',
         'email',
         'password',
-        'telefono',
+        'phone',
         'role',
-        'reputacion',
-        'preferencias_categoria',
-        'nivel_acceso',
-        'area_responsabilidad',
-        'fecha_registro',
-        'estado',
+        'reputation',
+        'category_preferences',
+        'access_level',
+        'responsibility_area',
+        'registration_date',
+        'status',
     ];
 
     protected $hidden = [
@@ -37,33 +37,30 @@ class User extends Authenticatable
     {
         return [
             'id' => 'integer',
-            'fecha_registro' => 'date',
+            'registration_date' => 'date',
             'password' => 'hashed',
         ];
     }
 
-    public function libros(): HasMany
+    // RELACIONES
+
+    public function books(): HasMany
     {
-        return $this->hasMany(Libro::class);
+        return $this->hasMany(Book::class);
     }
 
-    public function transaccions(): HasMany
+    public function purchases(): HasMany
     {
-        return $this->hasMany(Transaccion::class);
+        return $this->hasMany(Transaction::class, 'buyer_id');
     }
 
-    public function feedback(): HasMany
+    public function sales(): HasMany
     {
-        return $this->hasMany(Feedback::class);
+        return $this->hasMany(Transaction::class, 'seller_id');
     }
 
-    public function reportes(): HasMany
+    public function meetupAttendances(): HasMany
     {
-        return $this->hasMany(Reporte::class);
-    }
-
-    public function participacionEventos(): HasMany
-    {
-        return $this->hasMany(ParticipacionEvento::class);
+        return $this->hasMany(MeetupAttendance::class);
     }
 }

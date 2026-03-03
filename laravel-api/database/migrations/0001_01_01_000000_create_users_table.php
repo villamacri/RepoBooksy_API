@@ -13,18 +13,25 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellidos');
+            $table->string('name'); // antes nombre
+            $table->string('last_name'); // antes apellidos
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('telefono')->nullable();
-            $table->enum('role', ['usuario', 'moderador', 'admin'])->default('usuario');
-            $table->decimal('reputacion', 2, 1)->nullable();
-            $table->text('preferencias_categoria')->nullable();
-            $table->string('nivel_acceso')->nullable();
-            $table->text('area_responsabilidad')->nullable();
-            $table->date('fecha_registro');
-            $table->enum('estado', ['activo', 'inactivo', 'suspendido'])->default('activo');
+            $table->string('phone')->nullable();
+            
+            // Traducimos los roles al inglés
+            $table->enum('role', ['user', 'moderator', 'admin'])->default('user');
+            
+            $table->decimal('reputation', 2, 1)->nullable();
+            $table->text('category_preferences')->nullable();
+            $table->string('access_level')->nullable();
+            $table->text('responsibility_area')->nullable();
+            
+            $table->date('registration_date');
+            
+            // Traducimos los estados
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
+            
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
