@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function profileStats(Request $request): JsonResponse
+    {
+        $user = User::withCount(['books', 'meetups', 'transactions'])->find($request->user()->id);
+
+        return response()->json($user, 200);
+    }
+
     public function index(): JsonResponse
     {
         $users = User::with(['books', 'purchases', 'sales', 'meetupAttendances'])->get();

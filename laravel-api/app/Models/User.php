@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -54,6 +55,11 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'buyer_id');
     }
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'buyer_id');
+    }
+
     public function sales(): HasMany
     {
         return $this->hasMany(Transaction::class, 'seller_id');
@@ -62,5 +68,11 @@ class User extends Authenticatable
     public function meetupAttendances(): HasMany
     {
         return $this->hasMany(MeetupAttendance::class);
+    }
+
+    public function meetups(): BelongsToMany
+    {
+        return $this->belongsToMany(Meetup::class, 'meetup_user')
+            ->withTimestamps();
     }
 }

@@ -14,8 +14,22 @@ class BookController extends Controller
      */
     public function index(): JsonResponse
     {
-        $books = Book::with(['category', 'user', 'transactions', 'feedbacks'])->get();
-        return response()->json($books, 200);
+        $data = Book::with(['category', 'user', 'transactions'])->latest()->get()->toArray();
+        return response()->json($data ?? [], 200);
+    }
+
+    /**
+     * Latest books for home carousel.
+     */
+    public function latestBooks(): JsonResponse
+    {
+        $data = Book::with(['category', 'user', 'transactions'])
+            ->latest()
+            ->take(10)
+            ->get()
+            ->toArray();
+
+        return response()->json($data ?? [], 200);
     }
 
     /**
@@ -59,7 +73,7 @@ class BookController extends Controller
      */
     public function show(Book $book): JsonResponse
     {
-        $book->load(['category', 'user', 'transactions', 'feedbacks.user']);
+        $book->load(['category', 'user', 'transactions']);
         return response()->json($book, 200);
     }
 
