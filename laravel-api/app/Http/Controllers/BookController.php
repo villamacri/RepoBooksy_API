@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
@@ -111,7 +112,20 @@ class BookController extends Controller
      */
     public function destroy(Book $book): JsonResponse
     {
-        $book->delete();
-        return response()->json(['message' => 'Book deleted successfully'], 200);
+        try {
+            $book->delete();
+
+            return response()->json(['message' => 'Book deleted successfully'], 200);
+        } catch (QueryException $exception) {
+            $isForeignKeyRestriction = (int) ($exception->errorInfo[1] ?? 0) === 1451;
+
+            if ($isForeignKeyRestriction) {
+                return response()->json([
+                    'message' => 'No se puede eliminar el libro porque tiene transacciones asociadas. Te recomendamos cambiar su estado a no disponible.',
+                ], 422);
+            }
+
+            throw $exception;
+        }
     }
 }

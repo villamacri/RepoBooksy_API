@@ -47,7 +47,7 @@ class HomeFeedController extends Controller
             ->get()
             ->toArray();
 
-        $attendanceAppointments = MeetupAttendance::with(['meetup'])
+        $attendanceAppointments = MeetupAttendance::with('meetup')
             ->where('user_id', $request->user()->id)
             ->where('status', 'confirmed')
             ->whereHas('meetup', function ($query) {
@@ -61,6 +61,12 @@ class HomeFeedController extends Controller
                     'type' => 'meetup',
                     'id' => $attendance->id,
                     'meetup_id' => $attendance->meetup_id,
+                    'meetup' => $attendance->meetup ? [
+                        'id' => $attendance->meetup->id,
+                        'name' => $attendance->meetup->name,
+                        'location' => $attendance->meetup->location,
+                        'meetup_date' => optional($attendance->meetup->meetup_date)->format('Y-m-d'),
+                    ] : null,
                     'title' => $attendance->meetup?->name,
                     'location' => $attendance->meetup?->location,
                     'date_time' => optional($attendance->meetup?->meetup_date)->format('Y-m-d'),
@@ -79,6 +85,12 @@ class HomeFeedController extends Controller
                     'type' => 'meetup',
                     'id' => $meetup->id,
                     'meetup_id' => $meetup->id,
+                    'meetup' => [
+                        'id' => $meetup->id,
+                        'name' => $meetup->name,
+                        'location' => $meetup->location,
+                        'meetup_date' => optional($meetup->meetup_date)->format('Y-m-d'),
+                    ],
                     'title' => $meetup->name,
                     'location' => $meetup->location,
                     'date_time' => optional($meetup->meetup_date)->format('Y-m-d'),

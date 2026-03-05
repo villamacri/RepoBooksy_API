@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -19,7 +18,7 @@ class UserController extends Controller
 
     public function index(): JsonResponse
     {
-        $users = User::with(['books', 'purchases', 'sales', 'meetupAttendances'])->get();
+        $users = User::with(['books', 'purchases', 'sales', 'meetupAttendances.meetup'])->get();
         return response()->json($users, 200);
     }
 
@@ -29,31 +28,43 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
+            'password' => 'nullable|string|min:8',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:user,moderator,admin', // Traducido
             'reputation' => 'nullable|numeric|min:0|max:5',
             'category_preferences' => 'nullable|string',
             'access_level' => 'nullable|string|max:50',
             'responsibility_area' => 'nullable|string',
-            'registration_date' => 'required|date',
-            'status' => 'required|in:active,inactive,suspended', // Traducido
+            'registration_date' => 'nullable|date',
+            'status' => 'nullable|in:active,inactive,suspended', // Traducido
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $validator->validated();
-        $data['password'] = Hash::make($data['password']);
+        $validated = $validator->validated();
 
-        $user = User::create($data);
+        $user = new User();
+        $user->name = $validated['name'];
+        $user->last_name = $validated['last_name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? null;
+        $user->role = 'admin';
+        $user->reputation = $validated['reputation'] ?? null;
+        $user->category_preferences = $validated['category_preferences'] ?? null;
+        $user->access_level = $validated['access_level'] ?? null;
+        $user->responsibility_area = $validated['responsibility_area'] ?? null;
+        $user->registration_date = $validated['registration_date'] ?? now()->toDateString();
+        $user->status = $validated['status'] ?? 'active';
+        $user->password = $request->filled('password') ? (string) $request->input('password') : 'password123';
+        $user->save();
+
         return response()->json($user, 201);
     }
 
     public function show(User $user): JsonResponse
     {
-        $user->load(['books', 'purchases', 'sales', 'meetupAttendances']);
+        $user->load(['books', 'purchases', 'sales', 'meetupAttendances.meetup']);
         return response()->json($user, 200);
     }
 
@@ -63,7 +74,7 @@ class UserController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'last_name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-            'password' => 'sometimes|required|string|min:8',
+            'password' => 'sometimes|nullable|string|min:8',
             'phone' => 'nullable|string|max:20',
             'role' => 'sometimes|required|in:user,moderator,admin',
             'reputation' => 'nullable|numeric|min:0|max:5',
@@ -79,9 +90,11 @@ class UserController extends Controller
         }
 
         $data = $validator->validated();
-        
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
+
+        if ($request->filled('password')) {
+            $data['password'] = (string) $request->input('password');
+        } else {
+            unset($data['password']);
         }
 
         $user->update($data);

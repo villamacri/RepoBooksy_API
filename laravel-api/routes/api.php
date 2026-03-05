@@ -41,7 +41,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Get logged-in user data
     Route::get('/user', function (Request $request) {
-        return User::withCount(['books', 'meetups', 'transactions'])->find($request->user()->id);
+        return User::with(['meetupAttendances.meetup'])
+            ->withCount(['books', 'meetups', 'transactions'])
+            ->find($request->user()->id);
     });
     Route::get('/user/profile-stats', [UserController::class, 'profileStats']);
 

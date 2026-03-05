@@ -38,8 +38,10 @@ class User extends Authenticatable
     {
         return [
             'id' => 'integer',
-            'registration_date' => 'date',
+            'registration_date' => 'datetime:d/m/Y H:i', 
             'password' => 'hashed',
+            
+            'created_at' => 'datetime:d/m/Y H:i',
         ];
     }
 
