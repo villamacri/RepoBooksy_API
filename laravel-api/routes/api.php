@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeetupController;
 use App\Http\Controllers\MeetupAttendanceController;
 use App\Http\Controllers\HomeFeedController;
+use App\Http\Controllers\StatsController;
 use App\Models\User;
 
 /*
@@ -47,6 +48,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Home feed for mobile app
     Route::get('/home/feed', [HomeFeedController::class, 'index']);
 
+    // Admin Dashboard & Stats
+    Route::get('/admin/dashboard-stats', [StatsController::class, 'getSummary']);
+
     // --- FULL MANAGEMENT (CRUD) ---
     
     // Users & Transactions (Financial Module)
@@ -63,6 +67,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Meetups (Protected actions: create, update, destroy)
     Route::post('/meetups/{meetup}/attendances', [MeetupController::class, 'join']);
     Route::post('/meetups/{meetup}/join', [MeetupController::class, 'join']);
+    Route::get('/meetups/{meetup}/participants', [MeetupController::class, 'getParticipants']);
     Route::apiResource('meetups', MeetupController::class)->except(['index', 'show']);
     
     // Meetup Attendances (Joining/Leaving meetups)

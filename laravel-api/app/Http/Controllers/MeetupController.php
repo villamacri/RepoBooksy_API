@@ -95,4 +95,9 @@ class MeetupController extends Controller
         $meetup->delete();
         return response()->json(['message' => 'Meetup deleted successfully'], 200);
     }
+
+    public function getParticipants(Meetup $meetup): JsonResponse
+    {
+        return response()->json($meetup->users, 200);
+    }
 }

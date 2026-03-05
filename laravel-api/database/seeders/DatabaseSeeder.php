@@ -10,7 +10,6 @@ use App\Models\MeetupAttendance;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -20,388 +19,285 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-        MeetupAttendance::truncate();
-        Transaction::truncate();
-        Book::truncate();
-        Meetup::truncate();
-        Category::truncate();
-        User::truncate();
-        Schema::enableForeignKeyConstraints();
-
-        $defaultPassword = Hash::make('password123');
-
+        // 1. CREAR USUARIOS DE PRUEBA
         $admin = User::create([
             'name' => 'Admin',
-            'last_name' => 'Booksy',
-            'email' => 'admin@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000001',
+            'last_name' => 'BookMeet',
+            'email' => 'admin@bookmeet.com',
+            'password' => Hash::make('password123'),
             'role' => 'admin',
-            'reputation' => 5.0,
-            'registration_date' => Carbon::now()->subMonths(10),
+            'registration_date' => Carbon::now(),
             'status' => 'active',
         ]);
 
-        $moderator = User::create([
-            'name' => 'Marta',
-            'last_name' => 'Soto',
-            'email' => 'marta@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000002',
-            'role' => 'moderator',
-            'reputation' => 4.9,
-            'access_level' => 'content_moderation',
-            'responsibility_area' => 'Books and meetups moderation',
-            'registration_date' => Carbon::now()->subMonths(8),
-            'status' => 'active',
-        ]);
-
-        $userAna = User::create([
+        $user1 = User::create([
             'name' => 'Ana',
             'last_name' => 'Ruiz',
-            'email' => 'ana@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000003',
+            'email' => 'ana@ejemplo.com',
+            'password' => Hash::make('password123'),
             'role' => 'user',
-            'reputation' => 4.8,
-            'category_preferences' => json_encode(['Fantasy', 'Mystery']),
-            'registration_date' => Carbon::now()->subMonths(6),
+            'registration_date' => Carbon::now(),
             'status' => 'active',
         ]);
 
-        $userCarlos = User::create([
+        $user2 = User::create([
             'name' => 'Carlos',
             'last_name' => 'Mateo',
-            'email' => 'carlos@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000004',
+            'email' => 'carlos@ejemplo.com',
+            'password' => Hash::make('password123'),
             'role' => 'user',
-            'reputation' => 4.3,
-            'category_preferences' => json_encode(['Classics', 'Science']),
-            'registration_date' => Carbon::now()->subMonths(5),
+            'registration_date' => Carbon::now(),
             'status' => 'active',
         ]);
 
-        $userLucia = User::create([
-            'name' => 'Lucía',
-            'last_name' => 'Paredes',
-            'email' => 'lucia@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000005',
+        $user3 = User::create([
+            'name' => 'Laura',
+            'last_name' => 'Gómez',
+            'email' => 'laura@ejemplo.com',
+            'password' => Hash::make('password123'),
             'role' => 'user',
-            'reputation' => 4.6,
-            'category_preferences' => json_encode(['Non-fiction', 'Modern fiction']),
-            'registration_date' => Carbon::now()->subMonths(4),
+            'registration_date' => Carbon::now()->subMonths(2),
             'status' => 'active',
         ]);
 
-        $userDavid = User::create([
+        $user4 = User::create([
             'name' => 'David',
-            'last_name' => 'León',
-            'email' => 'david@booksy.app',
-            'password' => $defaultPassword,
-            'phone' => '600000006',
+            'last_name' => 'Sánchez',
+            'email' => 'david@ejemplo.com',
+            'password' => Hash::make('password123'),
             'role' => 'user',
-            'reputation' => 3.9,
-            'category_preferences' => json_encode(['Sci-Fi', 'Fantasy']),
-            'registration_date' => Carbon::now()->subMonths(3),
+            'registration_date' => Carbon::now()->subWeeks(3),
             'status' => 'active',
         ]);
 
-        $catModernFiction = Category::create([
-            'name' => 'Modern Fiction',
-            'description' => 'Contemporary novels and everyday stories.',
-        ]);
-        $catFantasy = Category::create([
-            'name' => 'Fantasy & Sci-Fi',
-            'description' => 'Epic worlds, space operas and speculative fiction.',
-        ]);
-        $catMystery = Category::create([
-            'name' => 'Mystery & Thriller',
-            'description' => 'Crime novels, suspense and detective stories.',
-        ]);
-        $catClassics = Category::create([
-            'name' => 'Classics',
-            'description' => 'Timeless books from international literature.',
-        ]);
-        $catScience = Category::create([
-            'name' => 'Science',
-            'description' => 'Popular science and educational reads.',
-        ]);
-        $catNonFiction = Category::create([
-            'name' => 'Non-fiction',
-            'description' => 'Essays, biographies and practical books.',
-        ]);
+        // 2. CREAR CATEGORÍAS (Géneros Literarios)
+        $catFiccion = Category::create(['name' => 'Ficción Contemporánea', 'description' => 'Novelas actuales y realistas.']);
+        $catFantasia = Category::create(['name' => 'Fantasía y Sci-Fi', 'description' => 'Mundos mágicos y futuros distópicos.']);
+        $catMisterio = Category::create(['name' => 'Misterio y Thriller', 'description' => 'Novela negra y suspense.']);
+        $catRomance = Category::create(['name' => 'Romance', 'description' => 'Historias de amor, pasión y desamor.']);
+        $catEnsayo = Category::create(['name' => 'Ensayo y Divulgación', 'description' => 'Ciencia, historia y aprendizaje.']);
+        $catTerror = Category::create(['name' => 'Terror', 'description' => 'Libros para leer con la luz encendida.']);
 
-        $bookMistborn = Book::create([
-            'title' => 'Mistborn: The Final Empire',
+        // 3. CREAR LIBROS DE SEGUNDA MANO
+        $book1 = Book::create([
+            'title' => 'El Imperio Final (Nacidos de la Bruma 1)',
             'author' => 'Brandon Sanderson',
-            'publisher' => 'Tor Books',
-            'publication_year' => 2006,
-            'description' => 'Great entry point to modern fantasy. Very good condition.',
+            'publisher' => 'Nova',
+            'publication_year' => 2016,
+            'description' => 'Lo leí una vez, está impecable. Perfecto para empezar con el Cosmere.',
             'physical_condition' => 'like_new',
             'operation_type' => 'sale',
             'price' => 12.50,
-            'publication_date' => Carbon::now()->subDays(12),
+            'publication_date' => Carbon::now()->subDays(2),
             'is_available' => true,
-            'category_id' => $catFantasy->id,
-            'user_id' => $userAna->id,
+            'category_id' => $catFantasia->id,
+            'user_id' => $user1->id,
         ]);
 
-        $book1984 = Book::create([
+        $book2 = Book::create([
             'title' => '1984',
             'author' => 'George Orwell',
             'publisher' => 'Debolsillo',
             'publication_year' => 2013,
-            'description' => 'Pocket edition with minor marks. Looking for exchange only.',
+            'description' => 'Edición de bolsillo. Tiene las esquinas un poco dobladas pero se lee perfectamente. Busco cambiarlo por algo de Asimov.',
             'physical_condition' => 'good',
             'operation_type' => 'exchange',
             'price' => null,
-            'publication_date' => Carbon::now()->subDays(18),
+            'publication_date' => Carbon::now()->subDays(5),
             'is_available' => true,
-            'category_id' => $catClassics->id,
-            'user_id' => $userCarlos->id,
+            'category_id' => $catFiccion->id,
+            'user_id' => $user2->id,
         ]);
 
-        $bookReinaRoja = Book::create([
+        $book3 = Book::create([
             'title' => 'Reina Roja',
             'author' => 'Juan Gómez-Jurado',
             'publisher' => 'Ediciones B',
             'publication_year' => 2018,
-            'description' => 'Hardcover copy, almost new.',
+            'description' => 'Tapa dura. Me lo regalaron y ya lo había leído.',
             'physical_condition' => 'new',
             'operation_type' => 'both',
             'price' => 15.00,
-            'publication_date' => Carbon::now()->subDays(3),
+            'publication_date' => Carbon::now()->subHours(5),
             'is_available' => true,
-            'category_id' => $catMystery->id,
-            'user_id' => $userAna->id,
+            'category_id' => $catMisterio->id,
+            'user_id' => $user1->id,
         ]);
 
-        $bookSapiens = Book::create([
-            'title' => 'Sapiens',
+        $book4 = Book::create([
+            'title' => 'Orgullo y Prejuicio',
+            'author' => 'Jane Austen',
+            'publisher' => 'Alianza Editorial',
+            'publication_year' => 2014,
+            'description' => 'Clásico imprescindible. Lo tengo repetido y busco cambiarlo.',
+            'physical_condition' => 'like_new',
+            'operation_type' => 'exchange',
+            'price' => null,
+            'publication_date' => Carbon::now()->subDays(1),
+            'is_available' => true,
+            'category_id' => $catRomance->id,
+            'user_id' => $user3->id,
+        ]);
+
+        $book5 = Book::create([
+            'title' => 'Sapiens: De animales a dioses',
             'author' => 'Yuval Noah Harari',
             'publisher' => 'Debate',
             'publication_year' => 2015,
-            'description' => 'Annotated copy, pages in good condition.',
-            'physical_condition' => 'good',
-            'operation_type' => 'sale',
-            'price' => 14.90,
-            'publication_date' => Carbon::now()->subDays(30),
-            'is_available' => false,
-            'category_id' => $catNonFiction->id,
-            'user_id' => $userLucia->id,
-        ]);
-
-        $bookDune = Book::create([
-            'title' => 'Dune',
-            'author' => 'Frank Herbert',
-            'publisher' => 'Ace',
-            'publication_year' => 2010,
-            'description' => 'Classic sci-fi copy for exchange lovers.',
-            'physical_condition' => 'acceptable',
-            'operation_type' => 'exchange',
-            'price' => null,
-            'publication_date' => Carbon::now()->subDays(26),
-            'is_available' => false,
-            'category_id' => $catFantasy->id,
-            'user_id' => $userDavid->id,
-        ]);
-
-        $bookHobbit = Book::create([
-            'title' => 'The Hobbit',
-            'author' => 'J.R.R. Tolkien',
-            'publisher' => 'Minotauro',
-            'publication_year' => 2001,
-            'description' => 'Used but clean copy, ideal for collectors.',
-            'physical_condition' => 'good',
-            'operation_type' => 'sale',
-            'price' => 9.90,
-            'publication_date' => Carbon::now()->subDays(9),
-            'is_available' => true,
-            'category_id' => $catFantasy->id,
-            'user_id' => $userCarlos->id,
-        ]);
-
-        $bookCleanCode = Book::create([
-            'title' => 'Clean Code',
-            'author' => 'Robert C. Martin',
-            'publisher' => 'Prentice Hall',
-            'publication_year' => 2008,
-            'description' => 'Highlighted in a few chapters. Perfect for students.',
+            'description' => 'Edición ilustrada. Tiene algunas notas a lápiz en los márgenes.',
             'physical_condition' => 'acceptable',
             'operation_type' => 'sale',
-            'price' => 17.50,
-            'publication_date' => Carbon::now()->subDays(7),
-            'is_available' => true,
-            'category_id' => $catScience->id,
-            'user_id' => $userLucia->id,
-        ]);
-
-        $bookAtomicHabits = Book::create([
-            'title' => 'Atomic Habits',
-            'author' => 'James Clear',
-            'publisher' => 'Avery',
-            'publication_year' => 2018,
-            'description' => 'Almost pristine copy. Sale or exchange.',
-            'physical_condition' => 'like_new',
-            'operation_type' => 'both',
-            'price' => 13.90,
+            'price' => 18.00,
             'publication_date' => Carbon::now()->subDays(4),
             'is_available' => true,
-            'category_id' => $catNonFiction->id,
-            'user_id' => $userDavid->id,
+            'category_id' => $catEnsayo->id,
+            'user_id' => $user4->id,
         ]);
 
-        $meetupThriller = Meetup::create([
-            'name' => 'Club de Lectura Sevilla',
-            'description' => 'Weekly meetup to discuss modern thriller books.',
+        $book6 = Book::create([
+            'title' => 'El Resplandor',
+            'author' => 'Stephen King',
+            'publisher' => 'Plaza & Janés',
+            'publication_year' => 2005,
+            'description' => 'Un poco amarillento por el tiempo, pero sin páginas sueltas.',
+            'physical_condition' => 'poor',
+            'operation_type' => 'both',
+            'price' => 5.00,
+            'publication_date' => Carbon::now()->subWeeks(1),
+            'is_available' => true,
+            'category_id' => $catTerror->id,
+            'user_id' => $user3->id,
+        ]);
+        
+        $book7 = Book::create([
+            'title' => 'Dune',
+            'author' => 'Frank Herbert',
+            'publisher' => 'Nova',
+            'publication_year' => 2020,
+            'description' => 'Totalmente nuevo, sin leer. Fue un regalo duplicado.',
+            'physical_condition' => 'new',
+            'operation_type' => 'sale',
+            'price' => 20.00,
+            'publication_date' => Carbon::now()->subHours(2),
+            'is_available' => true,
+            'category_id' => $catFantasia->id,
+            'user_id' => $user4->id,
+        ]);
+
+        // 4. CREAR EVENTOS (Quedadas en Locales Asociados)
+        $meetup1 = Meetup::create([
+            'name' => 'Club de Lectura: Thriller Español',
+            'description' => 'Nos reunimos para comentar los últimos éxitos de la novela negra española y tomar un buen café.',
             'meetup_date' => Carbon::now()->addDays(7),
-            'city' => 'Sevilla',
-            'location' => 'Central Library, Meeting Room B',
-            'max_capacity' => 12,
+            'location' => 'Cafetería La Cacharrería (Calle Regina, Sevilla)',
+            'max_capacity' => 10,
         ]);
 
-        $meetupFantasy = Meetup::create([
-            'name' => 'Intercambio de Fantasía',
-            'description' => 'Bring one fantasy book and exchange it with another reader.',
+        $meetup2 = Meetup::create([
+            'name' => 'Intercambio Masivo de Fantasía',
+            'description' => 'Trae tus libros de fantasía y ciencia ficción para intercambiar. ¡Conoceremos a otros lectores de la zona!',
             'meetup_date' => Carbon::now()->addDays(14),
-            'city' => 'Sevilla',
-            'location' => 'Cafe Quill & Coffee',
-            'max_capacity' => 18,
-        ]);
-
-        $meetupNonFiction = Meetup::create([
-            'name' => 'Encuentro de No Ficción y Ciencia',
-            'description' => 'Open conversation around science and personal growth books.',
-            'meetup_date' => Carbon::now()->addDays(21),
-            'city' => 'Sevilla',
-            'location' => 'Coworking Nova, Hall 1',
+            'location' => 'Librería Rayuela (Calle José Luis Luque, Sevilla)',
             'max_capacity' => 20,
         ]);
 
-        $meetupThriller->users()->attach([$userAna->id, $userCarlos->id]);
-        $meetupFantasy->users()->attach([$userDavid->id]);
-        $meetupNonFiction->users()->attach([$moderator->id, $userLucia->id]);
+        $meetup3 = Meetup::create([
+            'name' => 'Tarde de Clásicos y Té',
+            'description' => 'Debate sobre novela romántica del siglo XIX y merienda en grupo.',
+            'meetup_date' => Carbon::now()->addDays(20),
+            'location' => 'Tetería Al-Andalus (Sevilla)',
+            'max_capacity' => 8,
+        ]);
 
-        MeetupAttendance::create([
-            'enrollment_date' => Carbon::now()->subDays(2),
-            'status' => 'confirmed',
-            'user_id' => $userAna->id,
-            'meetup_id' => $meetupThriller->id,
-        ]);
-        MeetupAttendance::create([
-            'enrollment_date' => Carbon::now()->subDays(2),
-            'status' => 'confirmed',
-            'user_id' => $userCarlos->id,
-            'meetup_id' => $meetupThriller->id,
-        ]);
-        MeetupAttendance::create([
-            'enrollment_date' => Carbon::now()->subDay(),
-            'status' => 'waitlisted',
-            'user_id' => $userDavid->id,
-            'meetup_id' => $meetupFantasy->id,
-        ]);
-        MeetupAttendance::create([
-            'enrollment_date' => Carbon::now()->subDay(),
-            'status' => 'cancelled',
-            'user_id' => $userLucia->id,
-            'meetup_id' => $meetupFantasy->id,
-        ]);
+        // 5. REGISTRAR ASISTENCIAS A LOS EVENTOS
         MeetupAttendance::create([
             'enrollment_date' => Carbon::now(),
             'status' => 'confirmed',
-            'user_id' => $moderator->id,
-            'meetup_id' => $meetupNonFiction->id,
+            'user_id' => $user1->id,
+            'meetup_id' => $meetup1->id,
         ]);
 
+        MeetupAttendance::create([
+            'enrollment_date' => Carbon::now(),
+            'status' => 'confirmed',
+            'user_id' => $user2->id,
+            'meetup_id' => $meetup1->id,
+        ]);
+
+        MeetupAttendance::create([
+            'enrollment_date' => Carbon::now(),
+            'status' => 'confirmed',
+            'user_id' => $user3->id,
+            'meetup_id' => $meetup3->id,
+        ]);
+
+        // 6. CREAR TRANSACCIONES DE PRUEBA
+        // Transacciones de venta completadas
         Transaction::create([
             'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subDays(4),
-            'amount' => 14.90,
-            'payment_method' => 'bizum',
             'status' => 'completed',
-            'book_id' => $bookSapiens->id,
-            'buyer_id' => $userAna->id,
-            'seller_id' => $userLucia->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'exchange',
-            'transaction_date' => Carbon::now()->subDays(3),
-            'amount' => null,
-            'payment_method' => null,
-            'status' => 'completed',
-            'book_id' => $bookDune->id,
-            'buyer_id' => $userCarlos->id,
-            'seller_id' => $userDavid->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subDay(),
-            'amount' => 15.00,
-            'payment_method' => 'cash',
-            'status' => 'pending',
-            'book_id' => $bookReinaRoja->id,
-            'buyer_id' => $userLucia->id,
-            'seller_id' => $userAna->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'exchange',
-            'transaction_date' => Carbon::now(),
-            'amount' => null,
-            'payment_method' => null,
-            'status' => 'in_progress',
-            'book_id' => $book1984->id,
-            'buyer_id' => $userDavid->id,
-            'seller_id' => $userCarlos->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subDays(2),
-            'amount' => 9.90,
-            'payment_method' => 'card',
-            'status' => 'cancelled',
-            'book_id' => $bookHobbit->id,
-            'buyer_id' => $admin->id,
-            'seller_id' => $userCarlos->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subHours(20),
-            'amount' => 13.90,
-            'payment_method' => 'bizum',
-            'status' => 'in_progress',
-            'book_id' => $bookAtomicHabits->id,
-            'buyer_id' => $userAna->id,
-            'seller_id' => $userDavid->id,
-        ]);
-
-        Transaction::create([
-            'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subHours(6),
+            'transaction_date' => Carbon::now()->subDays(10),
             'amount' => 12.50,
-            'payment_method' => 'cash',
-            'status' => 'pending',
-            'book_id' => $bookMistborn->id,
-            'buyer_id' => $userCarlos->id,
-            'seller_id' => $userAna->id,
+            'payment_method' => 'credit_card',
+            'book_id' => $book1->id,
+            'buyer_id' => $user2->id,
+            'seller_id' => $user1->id,
         ]);
 
         Transaction::create([
             'transaction_type' => 'sale',
-            'transaction_date' => Carbon::now()->subHours(3),
-            'amount' => 17.50,
-            'payment_method' => 'card',
-            'status' => 'pending',
-            'book_id' => $bookCleanCode->id,
-            'buyer_id' => $userDavid->id,
-            'seller_id' => $userLucia->id,
+            'status' => 'completed',
+            'transaction_date' => Carbon::now()->subDays(8),
+            'amount' => 15.00,
+            'payment_method' => 'paypal',
+            'book_id' => $book3->id,
+            'buyer_id' => $user2->id,
+            'seller_id' => $user1->id,
         ]);
+
+        // Transacciones de intercambio
+        Transaction::create([
+            'transaction_type' => 'exchange',
+            'status' => 'completed',
+            'transaction_date' => Carbon::now()->subDays(5),
+            'amount' => null,
+            'payment_method' => null,
+            'book_id' => $book2->id,
+            'buyer_id' => $user1->id,
+            'seller_id' => $user2->id,
+        ]);
+
+        Transaction::create([
+            'transaction_type' => 'exchange',
+            'status' => 'pending',
+            'transaction_date' => Carbon::now()->subDay(),
+            'amount' => null,
+            'payment_method' => null,
+            'book_id' => $book1->id,
+            'buyer_id' => $user2->id,
+            'seller_id' => $admin->id,
+        ]);
+
+        // Generar más transacciones usando el factory (30 adicionales)
+        $allUsers = [$admin, $user1, $user2, $user3, $user4];
+        $allBooks = [$book1, $book2, $book3, $book4, $book5, $book6, $book7];
+
+        for ($i = 0; $i < 30; $i++) {
+            $randomBuyer = collect($allUsers)->random();
+            $randomSeller = collect($allUsers)->where('id', '!=', $randomBuyer->id)->random();
+            $randomBook = collect($allBooks)->random();
+            $transactionType = fake()->randomElement(['sale', 'exchange']);
+
+            Transaction::create([
+                'transaction_type' => $transactionType,
+                'status' => fake()->randomElement(['pending', 'completed', 'in_progress']),
+                'transaction_date' => fake()->dateTimeBetween('-20 days', 'now'),
+                'amount' => $transactionType === 'sale' ? fake()->randomFloat(2, 8, 45) : null,
+                'payment_method' => $transactionType === 'sale' ? fake()->randomElement(['credit_card', 'paypal', 'bank_transfer', 'cash']) : null,
+                'book_id' => $randomBook->id,
+                'buyer_id' => $randomBuyer->id,
+                'seller_id' => $randomSeller->id,
+            ]);
+        }
     }
 }
