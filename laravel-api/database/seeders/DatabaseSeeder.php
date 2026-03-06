@@ -9,7 +9,6 @@ use App\Models\Meetup;
 use App\Models\MeetupAttendance;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -24,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'last_name' => 'BookMeet',
             'email' => 'admin@bookmeet.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Corregido: sin Hash::make
             'role' => 'admin',
             'registration_date' => Carbon::now(),
             'status' => 'active',
@@ -34,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ana',
             'last_name' => 'Ruiz',
             'email' => 'ana@ejemplo.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Corregido: sin Hash::make
             'role' => 'user',
             'registration_date' => Carbon::now(),
             'status' => 'active',
@@ -44,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Carlos',
             'last_name' => 'Mateo',
             'email' => 'carlos@ejemplo.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Corregido: sin Hash::make
             'role' => 'user',
             'registration_date' => Carbon::now(),
             'status' => 'active',
@@ -54,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Laura',
             'last_name' => 'Gómez',
             'email' => 'laura@ejemplo.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Corregido: sin Hash::make
             'role' => 'user',
             'registration_date' => Carbon::now()->subMonths(2),
             'status' => 'active',
@@ -64,7 +63,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'David',
             'last_name' => 'Sánchez',
             'email' => 'david@ejemplo.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Corregido: sin Hash::make
             'role' => 'user',
             'registration_date' => Carbon::now()->subWeeks(3),
             'status' => 'active',
@@ -278,7 +277,6 @@ class DatabaseSeeder extends Seeder
             'seller_id' => $admin->id,
         ]);
 
-        // Generar más transacciones usando el factory (30 adicionales)
         $allUsers = [$admin, $user1, $user2, $user3, $user4];
         $allBooks = [$book1, $book2, $book3, $book4, $book5, $book6, $book7];
 
